@@ -1,0 +1,136 @@
+{% extends 'generator/schema.html' %}
+
+{% block content %}
+<!--<form method="post">-->
+<!--  {% csrf_token %}-->
+<!--  {{ form.as_p }}-->
+<!--&lt;!&ndash;  <input type="number" name="num_records" value="100" min="1" required>&ndash;&gt;-->
+<!--  <button type="submit">Create Data</button>-->
+<!--</form>-->
+
+<!--<form id="create-data-form" method="post">-->
+<!--  {% csrf_token %}-->
+<!--  {{ form.as_p }}-->
+<!--  <button id="create-data-button" type="button">Create Data</button>-->
+<!--</form>-->
+<style>
+    #dataset-pk-label, #dataset-time-create-label {
+        display: none;
+    }
+</style>
+
+<script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    var schema_pk = {{ schema.pk }};
+$(document).ready(function() {
+  $("#my-form").submit(function(e) {
+    e.preventDefault(); // prevent default form submission
+    $("#status").text("In progress"); // set status to "In progress"
+    $.ajax({
+      type: "POST",
+      url: "{% url 'generate_data' schema_pk=2 %}", // replace 'my_view' with the name of your Django view
+      data: $("#my-form").serialize(), // serialize the form data
+      success: function(response) {
+        $("#status").text("Done"); // set status to "Done"
+          $('#dataset-pk').text(response.dataset_pk); // update the dataset PK value
+    $('#dataset-time-create').text(response.dataset_time_create);
+    $('#dataset-pk-label').show();
+    $('#dataset-time-create-label').show();
+
+     var tableBody = $('#my-table-body');
+    var newRow = $('<tr>');
+    newRow.append($('<th>').attr('scope', 'row').text(response.dataset_pk));
+    newRow.append($('<td>').text(response.dataset_time_create));
+    newRow.append($('<td>').text("Done"));
+    newRow.append($('<td>').append($('<a>').attr('href', 'https://www.example.com').addClass('text-primary text-decoration-none').text('Download').css('padding-right', '20px')));
+    tableBody.append(newRow);
+
+        // handle successful response from server
+      },
+      error: function(response) {
+        // handle error response from server
+      }
+    });
+  });
+});
+</script>
+
+
+<div class="row mt-4">
+    <div class="col-1"></div>
+    <div class="col-md-8">
+        <form id="my-form" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-8 d-flex justify-content-end align-items-center">
+                    <div class="form-group">
+                        <label for="{{ form.num_records.id_for_label }}">Rows:</label>
+                        {{ form.num_records }}
+                    </div>
+                </div>
+                <div class="col-sm-4 d-flex justify-content-end align-items-center">
+                    <button class="btn btn-success" type="submit">Generate data</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+
+
+<!--<form id="my-form" method="post">-->
+<!--  {% csrf_token %}-->
+<!--    <div class="form-group">-->
+<!--        <label for="{{ form.num_records.id_for_label }}">Rows:</label>-->
+<!--        {{ form.num_records }}-->
+<!--    </div>-->
+<!--  <button class="btn btn-success" type="submit">Generate data</button>-->
+<!--</form>-->
+
+
+
+<div class="row mt-4">
+    <div class="col-1"></div>
+    <div class="col-md-8">
+            <div class="row">
+                <div class="col-sm-8 d-flex justify-content-end align-items-center">
+                </div>
+                <div class="col-sm-4 d-flex justify-content-end align-items-center">
+                   <div id="status" class="badge bg-primary text-wrap" style="width: 6rem;"></div>
+                </div>
+            </div>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+
+<!--<div>-->
+<!--  <p id="dataset-pk-label" style="display:none;">Dataset PK: <span id="dataset-pk"></span></p>-->
+<!--  <p id="dataset-time-create-label" style="display:none;">Dataset creation time: <span id="dataset-time-create"></span></p>-->
+<!--</div>-->
+
+{% endblock %}
+
+
+
+
+<!--<script>-->
+<!--$(document).ready(function() {-->
+<!--  $('#create-data-button').click(function() {-->
+<!--    $.ajax({-->
+<!--      type: 'POST',-->
+<!--      url: '/schema/' + {schema_pk} + '/generate_data/',-->
+<!--      data: $('#create-data-form').serialize(),-->
+<!--      success: function(response) {-->
+<!--        // Handle successful response here-->
+<!--      },-->
+<!--      error: function(xhr, status, error) {-->
+<!--        // Handle error response here-->
+<!--      }-->
+<!--    });-->
+<!--  });-->
+<!--});-->
+<!--</script>-->

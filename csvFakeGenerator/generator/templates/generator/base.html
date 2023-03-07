@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+
+{% include 'generator/navbar.html' %}
+
+{% block mainmenu %}
+
+<div class="row mt-4">
+    <div class="col-1"></div>
+    <div class="col-6">
+        <p>Data schemas</p>
+    </div>
+    <div class="col-2 text-right">
+        <a href="{% url 'create_schema' %}">
+            <button class="btn btn-success">New schema</button>
+        </a>
+    </div>
+    <div class="col-3"></div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-1"></div>
+    <div class="col-8">
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Modified</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for schema in schemas %}
+    <tr>
+        <th scope="row">{{ schema.pk }}</th>
+        <td><a href="{{ schema.get_absolute_url }}" class="text-primary text-decoration-none">{{ schema.name }}}</a>
+        </td>
+        <td>{{ schema.time_modified }}</td>
+        <td><a href="" class="text-primary text-decoration-none" style="padding-right: 20px;">Edit
+            schema</a>
+            <a href="{% url 'delete_schema' schema.pk %}" class="text-danger text-decoration-none">Delete</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    </div>
+        <div class="col-3"></div>
+    </div>
+{% endblock mainmenu %}
+
+{% block content %}
+{% endblock %}
+</body>
+</html>

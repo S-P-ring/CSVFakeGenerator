@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+
+{% include 'generator/navbar.html' %}
+
+    <div class="row mt-4">
+        <div class="col-1"></div>
+        <div class="col-5 d-flex align-items-center">
+           <p class="mb-0 mr-3">{{ schema.name }}</p>
+        <a href="https://www.example.com" class="text-primary text-decoration-none " >Edit schema</a>
+        </div>
+        <div class="col-6"></div>
+    </div>
+
+<div class="row mt-4">
+        <div class="col-1"></div>
+     <div class="col-6">
+    <table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Column name</th>
+        <th scope="col">Column type</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for column in schema.column_set.all %}
+    <tr>
+        <th scope="row">{{ column.pk }}</th>
+        <td>{{ column.name }}</td>
+        <td>{{ column.data_type }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+     </div>
+          <div class="col-6"></div>
+</div>
+
+{% block content %}
+
+{% endblock %}
+
+<div class="row mt-4">
+        <div class="col-1"></div>
+     <div class="col-8">
+    <table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Created</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody id="my-table-body">
+    {% for dataset in schema.dataset_set.all %}
+    <tr>
+        <th scope="row">{{ dataset.pk }}</th>
+        <td>{{ dataset.created_date }}</td>
+        <td>{{ dataset.status }}</td>
+        <td><a href="https://www.example.com" class="text-primary text-decoration-none" style="padding-right: 20px;">Download</a>
+            </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+     </div>
+          <div class="col-4"></div>
+</div>
+
+
+</body>
+</html>

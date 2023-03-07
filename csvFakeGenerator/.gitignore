@@ -1,0 +1,4 @@
+/venv/
+/csvFakeGenerator/db.sqlite3
+/csvFakeGenerator/
+.idea

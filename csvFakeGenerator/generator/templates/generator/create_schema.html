@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fake CSV</title>
+</head>
+
+{% include 'generator/navbar.html' %}
+
+<form id="my-form" method="post">
+
+    <div class="row mt-4">
+    <div class="col-1"></div>
+    <div class="col-6">
+        <p>New schema</p>
+    </div>
+    <div class="col-4 text-right">
+            <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    <div class="col-1"></div>
+    </div>
+
+    {% csrf_token %}
+
+        <div class="row mt-4">
+            <div class="col-1"></div>
+            <div class="col-10">
+    {% for field in form %}
+    <div class="form-group">
+        <div class="row mt-1">
+      <label for="{{ field.id_for_label }}">
+              {{ field.label }}
+      </label>
+      {% if field.name == 'column_separator' or field.name == 'string_character' %}
+            <div class="col-md-3">
+        {{ field }}
+            </div>
+      {% else %}
+            <div class="col-md-3">
+        {{ field }}
+                </div>
+      {% endif %}
+        </div>
+    </div>
+  {% endfor %}
+    {{ form.columns.management_form }}
+
+                <div class="row mt-4">
+
+        <p class="text-start">Shema columns</p>
+</div>
+
+    <div id="columns-container">
+  {% for column_form in form.columns %}
+    <div class="column-form">
+     <div class="form-group row">
+        <label for="{{ column_form.name.id_for_label }}" class="col-sm-2 col-form-label">Name:</label>
+          <div class="col-sm-10">
+              {{ column_form.name }}
+          </div>
+     </div>
+      <div class="form-group row">
+        <label for="{{ column_form.data_type.id_for_label }}" class="col-sm-2 col-form-label">Type:</label>
+          <div class="col-sm-10">
+        {{ column_form.data_type }}
+          </div>
+      </div>
+      <div class="form-group row">
+        <label for="{{ column_form.order.id_for_label }}" class="col-sm-2 col-form-label">Order:</label>
+          <div class="col-sm-10">
+        {{ column_form.order }}
+              </div>
+      </div>
+      <div class="form-group range-min row">
+        <label for="{{ column_form.range_min.id_for_label }}" class="col-sm-2 col-form-label">From</label>
+          <div class="col-sm-10">
+        {{ column_form.range_min }}
+              </div>
+      </div>
+      <div class="form-group range-max row">
+        <label for="{{ column_form.range_max.id_for_label }}" class="col-sm-2 col-form-label">To</label>
+          <div class="col-sm-10">
+        {{ column_form.range_max }}
+              </div>
+      </div>
+    </div>
+  {% endfor %}
+        <br>
+    </div>
+                <div class="col-1"></div>
+    </div>
+</div>
+    <div class="row mt-4">
+    <div class="col-1">
+    </div>
+    <div class="col-3 text-right">
+            <button id="add-column-btn" class="btn btn-primary" type="button">Add column</button>
+    </div>
+    <div class="col-8"></div>
+</div>
+
+</form>
+
+<script>
+  const columnsContainer = document.getElementById('columns-container');
+  const addColumnBtn = document.getElementById('add-column-btn');
+  const columnForm = document.querySelector('.column-form');
+
+  let counter = {{ form.columns|length }};
+
+
+  function updateIds(element) {
+  const name = element.querySelector('input[name$="-name"]');
+  const dataType = element.querySelector('select[name$="-data_type"]');
+  const order = element.querySelector('input[name$="-order"]');
+  const rangeMin = element.querySelector('input[name$="-range_min"]');
+  const rangeMax = element.querySelector('input[name$="-range_max"]');
+
+  const prefix = 'column_set';
+
+  const newName = `${prefix}-${counter}-name`;
+  const newDataType = `${prefix}-${counter}-data_type`;
+  const newOrder = `${prefix}-${counter}-order`;
+  const newRangeMin = `${prefix}-${counter}-range_min`;
+  const newRangeMax = `${prefix}-${counter}-range_max`;
+
+  name.id = `id_${newName}`;
+  name.setAttribute('name', `${prefix}-${counter}-name`);
+
+  dataType.id = `id_${newDataType}`;
+  dataType.setAttribute('name', `${prefix}-${counter}-data_type`);
+
+  order.id = `id_${newOrder}`;
+  order.setAttribute('name', `${prefix}-${counter}-order`);
+
+  rangeMin.id = `id_${newRangeMin}`;
+  rangeMin.setAttribute('name', `${prefix}-${counter}-range_min`);
+
+  rangeMax.id = `id_${newRangeMax}`;
+  rangeMax.setAttribute('name', `${prefix}-${counter}-range_max`);
+}
+
+  function updateRangeFields(element) {
+    const dataTypeField = element.querySelector('select[name$="-data_type"]');
+    const rangeMinField = element.querySelector('.range-min');
+    const rangeMaxField = element.querySelector('.range-max');
+
+    if (dataTypeField.value === 'TEXT' || dataTypeField.value === 'INTEGER') {
+      rangeMinField.style.display = '';
+      rangeMaxField.style.display = '';
+    } else {
+      rangeMinField.style.display = 'none';
+      rangeMaxField.style.display = 'none';
+    }
+  }
+
+  addColumnBtn.addEventListener('click', () => {
+    const newColumnForm = columnForm.cloneNode(true);
+    updateIds(newColumnForm);
+    updateRangeFields(newColumnForm);
+    columnsContainer.appendChild(newColumnForm);
+    counter++;
+  });
+
+  columnsContainer.addEventListener('change', (event) => {
+    const target = event.target.closest('.column-form');
+
+    if (target) {
+      updateRangeFields(target);
+    }
+  });
+
+  // Initialize range fields
+  const columnForms = document.querySelectorAll('.column-form');
+  columnForms.forEach(updateRangeFields);
+</script>
