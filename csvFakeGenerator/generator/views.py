@@ -31,6 +31,10 @@ class LoginUser(LoginView):
 
 
 class SchemaList(LoginRequiredMixin, ListView):
+    """
+        Home page of the site.
+        Displays a list of all DataSchema objects.
+    """
     model = DataSchema
     template_name = 'generator/base.html'
     context_object_name = 'schemas'
@@ -44,7 +48,7 @@ class SchemaList(LoginRequiredMixin, ListView):
         return DataSchema.objects.all()
 
 
-class DeleteSchema(DeleteView):
+class DeleteSchema(LoginRequiredMixin, DeleteView):
     model = DataSchema
     template_name = 'generator/schema_confirm_delete.html'
     pk_url_kwarg = 'schema_pk'
@@ -59,19 +63,26 @@ class DeleteSchema(DeleteView):
         return reverse_lazy('home')
 
 
-def logout_user(request):
+def logout_user(LoginRequiredMixin, request):
     logout(request)
     return redirect('login')
 
 
-class ShowSchema(DetailView):
+class ShowSchema(LoginRequiredMixin, DetailView):
+    """Displays a shema with a defined pk"""
     model = DataSchema
     template_name = 'generator/schema.html'
     pk_url_kwarg = 'schema_pk'
     context_object_name = 'schema'
 
 
-class CreateDataSchema(View):
+class CreateDataSchema(LoginRequiredMixin, View):
+    """
+        Form of creation DataSchema.
+        Column_form_set is used to display a form,
+        for creating Column objects on the same page at the same time
+    """
+    
     form_class = DataSchemaForm
     template_name = 'generator/create_schema.html'
 
@@ -95,7 +106,12 @@ class CreateDataSchema(View):
 
 
 
-class GenerateDataSet(View):
+class GenerateDataSet(LoginRequiredMixin, View):
+    """
+        The generate_data function generates the data.
+        It uses an ajax request that checks if the file is ready.
+        When ready it returns success.
+    """
     model = DataSchema
     form_class = GenerateDataForm
     template_name = 'generator/generate_data.html'
