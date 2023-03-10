@@ -52,6 +52,10 @@ def generate_data(data_type: str, range_min: int, range_max: int) -> str | int:
 
 
 def generate_row(field_dict:dict) -> List[str]:
+    """
+        Accepts a dictionary with names, types, and order.
+        Sorts in order and generates strings.
+    """
     row_data = []
     for field_name in sorted(field_dict.keys(), key=lambda x: field_dict[x]['order']):
         field_data = field_dict[field_name]
