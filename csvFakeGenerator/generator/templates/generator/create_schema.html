@@ -15,16 +15,16 @@
         <p>New schema</p>
     </div>
     <div class="col-4 text-right">
-            <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-    <div class="col-1"></div>
+        <div class="col-1"></div>
     </div>
 
     {% csrf_token %}
 
-        <div class="row mt-4">
-            <div class="col-1"></div>
-            <div class="col-10">
+    <div class="row mt-4">
+        <div class="col-1"></div>
+        <div class="col-10">
     {% for field in form %}
     <div class="form-group">
         <div class="row mt-1">
@@ -33,22 +33,22 @@
       </label>
       {% if field.name == 'column_separator' or field.name == 'string_character' %}
             <div class="col-md-3">
-        {{ field }}
+                {{ field }}
             </div>
       {% else %}
             <div class="col-md-3">
-        {{ field }}
+                {{ field }}
                 </div>
       {% endif %}
         </div>
     </div>
-  {% endfor %}
+    {% endfor %}
+            
     {{ form.columns.management_form }}
 
-                <div class="row mt-4">
-
-        <p class="text-start">Shema columns</p>
-</div>
+ <div class="row mt-4">
+       <p class="text-start">Shema columns</p>
+ </div>
 
     <div id="columns-container">
   {% for column_form in form.columns %}
@@ -108,7 +108,7 @@
 
   let counter = {{ form.columns|length }};
 
-
+  //update tag's properties
   function updateIds(element) {
   const name = element.querySelector('input[name$="-name"]');
   const dataType = element.querySelector('select[name$="-data_type"]');
@@ -153,7 +153,7 @@
       rangeMaxField.style.display = 'none';
     }
   }
-
+   // button click
   addColumnBtn.addEventListener('click', () => {
     const newColumnForm = columnForm.cloneNode(true);
     updateIds(newColumnForm);
@@ -161,7 +161,7 @@
     columnsContainer.appendChild(newColumnForm);
     counter++;
   });
-
+   // create column-form
   columnsContainer.addEventListener('change', (event) => {
     const target = event.target.closest('.column-form');
 
