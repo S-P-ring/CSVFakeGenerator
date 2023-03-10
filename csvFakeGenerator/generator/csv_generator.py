@@ -65,8 +65,7 @@ def generate_row(field_dict:dict) -> List[str]:
     return row_data
 
 
-def generate_csv(field_dict: dict, num_rows: str, column_separator: str, string_character: str) -> None:
-    num_rows = int(num_rows)
+def generate_csv(field_dict: dict, num_rows: int, column_separator: str, string_character: str) -> None:
     filename = generate_filename('csv')
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=column_separator, quotechar=string_character)
