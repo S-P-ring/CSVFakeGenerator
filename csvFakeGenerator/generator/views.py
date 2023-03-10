@@ -14,7 +14,7 @@ from .forms import LoginUserForm
 from .models import DataSchema
 
 from .csv_generator import generate_csv, prepare_data
-from .services import is_ajax, get_schema, create_dataset
+from .services import is_ajax, create_dataset, get_ajax_data_response, get_num_records, generate_data
 
 
 class LoginUser(LoginView):
@@ -103,18 +103,11 @@ class GenerateDataSet(View):
     context_object_name = 'schema'
 
     def post(self, request, schema_pk):
-        data_schema = get_schema(schema_pk)
         data_set = create_dataset(data_schema)
-        num_records = int(request.POST.get('num_records'))
-        fields = prepare_data(data_schema)
-        data_set.status = 'In progress'
-        column_separator = data_set.column_separator
-        string_character = data_set.string_character
-        generate_csv(fields, num_records, column_separator, string_character)
+        num_records = get_num_records(request)
+        generate_data(schema_pk=schema_pk, data_set=data_set, num_records=num_records)
         if is_ajax(request):
-            data = {'status': 'success',
-                    'dataset_pk': data_set.pk,
-                    'dataset_time_create': data_set.created_date, }
+            data = get_ajax_data_response(data_set)
             return JsonResponse(data)
         else:
             return HttpResponse("Form submitted")
