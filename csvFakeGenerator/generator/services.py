@@ -35,4 +35,4 @@ def generate_data(*, schema_pk, data_set, num_records):
         generate_csv(fields, num_records, column_separator, string_character)
         
  def get_num_records(request):
-     retunr int(request.POST.get('num_records'))
+     return int(request.POST.get('num_records'))
