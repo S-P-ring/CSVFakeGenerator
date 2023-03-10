@@ -28,6 +28,7 @@ class DataSchemaForm(forms.ModelForm):
         model = DataSchema
         fields = ['name', 'column_separator', 'string_character']
 
+    #Here it is used to represent a coherent form
     ColumnFormSet = inlineformset_factory(DataSchema, Column, form=ColumnForm, extra=1)
     columns = ColumnFormSet()
 
